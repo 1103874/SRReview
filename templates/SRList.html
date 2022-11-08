@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% load App_filter %}
+
+{% block title %}
+    <title>전사 SR 사례</title>
+{% endblock %}
+
+{% block content %}
+    <div class="flex-xl-fill m-5 my-3">
+    <h3><b><i>※ SR 사례 현황 LIST</i></b></h3>
+    </div>
+
+    <div class="flex-xl-fill m-5 my-3">
+        <table class="table table-bordered text-center table-striped">
+            <thead class="table-dark align-middle">
+            <tr>
+                <th>No</th>
+                <th>담당</th>
+                <th>날짜</th>
+                <th>구분</th>
+                <th>사례명</th>
+                <th>내용 및 추진성과</th>
+                <th>첨부문서</th>
+                <th>비고</th>
+            </tr>
+            </thead>
+
+            <tbody class="align-middle">
+            {% for qi in qs %}
+                <tr style="font-size: 13px">
+                    <td style="width: 1rem">{{ qs.paginator.count|sub:qs.start_index|sub:forloop.counter0|add:1 }}</td>
+                    <td style="width: 8rem">{{ qi.region }}</td>
+                    <td style="width: 8rem">{{ qi.dt }}</td>
+                    <td style="width: 8rem">{{ qi.sr_type }}</td>
+                    <td class="text-lg-start text-break">{{ qi.title }}</td>
+                    <td class="text-lg-start text-break"> {{ qi.description }} </td>
+                    <td style="width: 100px;">
+                        {% if qi.file_upload %}
+                            <a href="{{ qi.file_upload.url }}"
+                               class="btn btn-outline-dark" style="font-size: 12px; background-color: #E9E9E9;"
+                               role="button" download><B>Download</B></a>
+                        {% endif %}
+                    </td>
+                    <td style="width: 130px;">
+                        <a href="{% url 'App:SRUpdate' qi.pk %}"
+                           class="btn btn-outline-dark" style="font-size: 12px; background-color: #E9E9E9;"><b>수정</b></a>
+                        <a href="{% url 'App:SRDelete' qi.pk %}"
+                           class="btn btn-outline-dark" style="font-size: 12px; background-color: #E9E9E9;"><b>삭제</b></a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    <a href="{% url 'App:SRCreate' %}"
+       class="btn btn-primary">작성하기</a>
+    </div>
+
+<div>
+<!-- 페이징 처리 시작 -->
+    <ul class="pagination justify-content-center">
+<!-- 이전 페이지 -->
+        {% if qs.has_previous %}
+            <li class="page-item">
+                <a class="page-link"
+                   href="?page={{ qs.previous_page_number }}">이전</a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+                <a class="page-link" tabindex="-1" aria-disabled="true" href="#">이전</a>
+            </li>
+        {% endif %}
+<!-- 페이지 리스트 -->
+        {% for page_number in qs.paginator.page_range %}
+            {% if page_number >= qs.number|add:-4 and page_number <= qs.number|add:4 %}
+                {% if page_number == qs.number %}
+                    <li class="page-item active" aria-current="page">
+                        <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
+                    </li>
+                {% else %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
+                    </li>
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+<!-- 다음 페이지 -->
+        {% if qs.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ qs.next_page_number }}">다음</a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+                <a class="page-link" tabindex="-1" aria-disabled="true" href="#">다음</a>
+            </li>
+        {% endif %}
+    </ul>
+</div>
+{% endblock %}

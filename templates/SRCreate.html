@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    <title>전사 SR 사례 작성</title>
+{% endblock %}
+
+
+{% block content %}
+    <div class="flex-xl-fill m-5 my-3 col-6">
+        <h5 class="my-3 border-bottom pb-2"><b>※ 사례 등록하기</b></h5>
+        {#{{ form.as_p }} 태그는 form 엘리먼트와 입력 항목을 자동으로 생성해주지만 부트스트랩을 적용할 수 없기에 forms.py에서 적용한다.#}
+        <form method="post" class="post-form my-3">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">등록</button>
+            <input class="btn btn-primary"  type="submit" value="뒤로가기" onclick="window.history.go(-1); return false;" />
+        </form>
+    </div>
+{% endblock %}
